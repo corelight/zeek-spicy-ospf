@@ -1,3 +1,3 @@
-# @TEST-EXEC: zeek -NN | grep -qi ANALYZER_SPICY_OSPF
+# @TEST-EXEC: zeek -NN | grep -qi ANALYZER_SPICY__OSPF
 #
 # @TEST-DOC: Check that the OSPF analyzer is available.

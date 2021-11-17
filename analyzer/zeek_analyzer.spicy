@@ -5,11 +5,10 @@ module Zeek_zeek_spicy_ospf;
 import zeek_spicy_ospf;
 import zeek;
 
-# TODO: For DPD, protocol analyzers should confirm or reject a protocol.
-# on zeek_spicy_ospf::OSPF::%done {
-#     zeek::confirm_protocol();
-# }
-#
-# on zeek_spicy_ospf::OSPF::%error {
-#     zeek::reject_protocol("error while parsing OSPF record");
-# }
+#on zeek_spicy_ospf::OSPFPacket::%done {
+#    zeek::confirm_protocol();
+#}
+
+#on zeek_spicy_ospf::OSPFPacket::%error {
+#    zeek::reject_protocol("error while parsing OSPF record");
+#}

@@ -1,25 +1,15 @@
-# TODO: Adjust here whether this is a file, tcp or ucp analyzer,
-# and the ports the analyzers work on. See
-# https://docs.zeek.org/projects/spicy/en/latest/zeek.html#interface-definitions-evt-files
-# for the DSL used here. Below, the active analyzer declaration defines a protocol analyzer.
-#
-# A file analyzer would be define like this:
-#
-#     file analyzer spicy::ZIP:
-#         parse with ZIP::Archive,
-#         mime-type application/zip;
-#
-# A packet analyzer would look like this:
-
-#     packet analyzer spicy::RawLayer:
-#         parse with Raw Layer::Packet;
-
-protocol analyzer spicy::OSPF over TCP:
-    parse with zeek_spicy_ospf::OSPF,
-    port 8080/tcp;
+packet analyzer spicy::OSPF:
+    parse with zeek_spicy_ospf::OSPFPacket;
 
 import zeek_spicy_ospf;
 import Zeek_zeek_spicy_ospf;
 
-# TODO: Connect Spicy-side events with Zeek-side events.
-on zeek_spicy_ospf::OSPF -> event OSPF::message($conn, $is_orig, self.payload);
+on zeek_spicy_ospf::OSPFPacket -> event OSPF::message(self.version, self.ospf_type, self.router_id, self.area_id, self.autype, self.auth);
+
+on zeek_spicy_ospf::RouterLSALink -> event OSPF::router_lsa_link(ospf_type, router_id, area_id, link_state_id, advert_router, self.link_id, self.link_data, self.link_type);
+
+on zeek_spicy_ospf::NetworkLSA -> event OSPF::network_lsa(ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.routers);
+
+on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item(ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.metric, self.TOS);
+
+on zeek_spicy_ospf::ExternalLSAItem -> event OSPF::external_lsa_item(ospf_type, router_id, area_id, link_state_id, advert_router, netmask, self.metric, self.fwd_addr, self.route_tag);
