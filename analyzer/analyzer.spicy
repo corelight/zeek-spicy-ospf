@@ -1,0 +1,7 @@
+# TODO: Define your analyzers here.
+
+module zeek_spicy_ospf;
+
+public type OSPF = unit {
+    payload: bytes &eod;
+};
