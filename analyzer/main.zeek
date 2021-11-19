@@ -33,20 +33,16 @@ export {
                                 router_id: addr, area_id: addr, autype: count, auth: count);
 
     global OSPF::router_lsa_link: event(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                                        link_state_id: addr, advert_router: addr, 
-                                        link_id: addr, link_data: addr, link_type: zeek_spicy_ospf::RouterLSAType);
+                                        link_state_id: addr, advert_router: addr, link_id: addr, link_data: addr, link_type: zeek_spicy_ospf::RouterLSAType);
 
     global OSPF::network_lsa: event(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                                    link_state_id: addr, advert_router: addr, 
-                                    netmask: addr, routers: vector of addr);
+                                    link_state_id: addr, advert_router: addr, netmask: addr, routers: vector of addr);
 
     global OSPF::summary_lsa_item: event(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                                         link_state_id: addr, advert_router: addr, 
-                                         netmask: addr, metric: count, TOS: count);
+                                         link_state_id: addr, advert_router: addr, netmask: addr, metric: count);
 
     global OSPF::external_lsa_item: event(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                                          link_state_id: addr, advert_router: addr, 
-                                          netmask: addr, metric: count, fwd_addr: addr, route_tag: count);
+                                          link_state_id: addr, advert_router: addr, netmask: addr, metric: count, fwd_addr: addr, route_tag: count);
 
     # Log event
     global OSPF::log_ospf: event(rec: OSPF::Info);
@@ -77,21 +73,12 @@ const LinkTypes = {
 
 event zeek_init()
     {
-#    if ( ! PacketAnalyzer::try_register_packet_analyzer_by_name("Ethernet", 0x0800, "spicy::OSPF") )
     if ( ! PacketAnalyzer::try_register_packet_analyzer_by_name("IP", 0x59, "spicy::OSPF") )
 		Reporter::error("cannot register OSPF Spicy analyzer");
     }
 
-#event OSPF::message(version: count, ospf_type: zeek_spicy_ospf::MsgType,
-#                    router_id: addr, area_id: addr, autype: count, auth: count)
-#	{
-#    local info: Info = [$ospf_type=ospf_type, $router_id=router_id, $area_id=area_id];
-#    Log::write(OSPF::OSPF_LOG, info);
-#	}
-
 event OSPF::router_lsa_link(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                            link_state_id: addr, advert_router: addr, 
-                            link_id: addr, link_data: addr, link_type: zeek_spicy_ospf::RouterLSAType)
+                            link_state_id: addr, advert_router: addr, link_id: addr, link_data: addr, link_type: zeek_spicy_ospf::RouterLSAType)
     {
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id, $advert_router=advert_router,
                         $link_id=link_id, $link_data=link_data, $link_type=LinkTypes[link_type], $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];
@@ -99,8 +86,7 @@ event OSPF::router_lsa_link(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType
     }
 
 event OSPF::network_lsa(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                        link_state_id: addr, advert_router: addr, 
-                        netmask: addr, routers: vector of addr)
+                        link_state_id: addr, advert_router: addr, netmask: addr, routers: vector of addr)
     {
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id, $advert_router=advert_router, 
                         $netmask=netmask, $routers=routers, $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];
@@ -108,8 +94,7 @@ event OSPF::network_lsa(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, os
     }
 
 event OSPF::summary_lsa_item(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                             link_state_id: addr, advert_router: addr, 
-                             netmask: addr, metric: count, TOS: count)
+                             link_state_id: addr, advert_router: addr, netmask: addr, metric: count)
     {
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id, $advert_router=advert_router,
                         $netmask=netmask, $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];
@@ -117,8 +102,7 @@ event OSPF::summary_lsa_item(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSATyp
     }
 
 event OSPF::external_lsa_item(pkt: raw_pkt_hdr, lsa_type: zeek_spicy_ospf::LSAType, ospf_type: zeek_spicy_ospf::MsgType, router_id: addr, area_id: addr, 
-                              link_state_id: addr, advert_router: addr, 
-                              netmask: addr, metric: count, fwd_addr: addr, route_tag: count)
+                              link_state_id: addr, advert_router: addr, netmask: addr, metric: count, fwd_addr: addr, route_tag: count)
     {
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id, $advert_router=advert_router,
                         $netmask=netmask, $fwd_addr=fwd_addr, $route_tag=route_tag, $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];

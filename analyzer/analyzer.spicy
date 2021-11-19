@@ -23,25 +23,7 @@ public type RouterLSAType = enum {
 	Virtual	            = 4,
 };
 
-public type IPHeader = unit {
-    info: bitfield(8) {
-        ver: 4..7;
-        ihl: 0..3;
-	};
-    TOS: uint8;
-    total_len: uint16;
-    ID: uint16;
-    flags_frg_off: uint16;
-    TTL: uint8;
-    protocol: uint8 &requires=($$ == 0x59);
-    hdr_checksum: uint16;
-    src_addr: addr &ipv4;
-    dst_addr: addr &ipv4;
-    opts: bytes &size=(4*self.info.ihl)-20 if ((4*self.info.ihl)-20 > 0);
-};
-
 public type OSPFPacket = unit {
-#    ip_header: IPHeader;
     version: uint8;
     ospf_type: uint8 &convert=MsgType($$);
     packet_length: uint16 &requires=($$ >= 24) { self.data_size = $$-24; }
@@ -54,11 +36,11 @@ public type OSPFPacket = unit {
     var data_size: uint16;
 
 	switch ( self.ospf_type ) {
-		MsgType::Hello -> hello: HelloPacket(self.ospf_type, self.router_id, self.area_id) &size=self.data_size;
-		MsgType::DB_Desc -> dd_desc: Database(self.ospf_type, self.router_id, self.area_id, self.data_size) &size=self.data_size;
-		MsgType::LSR -> lsr: LinkRequest(self.ospf_type, self.router_id, self.area_id) &size=self.data_size;
-		MsgType::LSU -> lsu: LinkUpdate(self.ospf_type, self.router_id, self.area_id) &size=self.data_size;
-		MsgType::LSAck -> lsack: LinkAck(self.ospf_type, self.router_id, self.area_id, self.data_size) &size=self.data_size;
+		MsgType::Hello -> hello: HelloPacket(self.ospf_type, self.router_id, self.area_id);
+		MsgType::DB_Desc -> dd_desc: Database(self.ospf_type, self.router_id, self.area_id, self.data_size);
+		MsgType::LSR -> lsr: LinkRequest(self.ospf_type, self.router_id, self.area_id);
+		MsgType::LSU -> lsu: LinkUpdate(self.ospf_type, self.router_id, self.area_id);
+		MsgType::LSAck -> lsack: LinkAck(self.ospf_type, self.router_id, self.area_id, self.data_size);
         * -> payload: bytes &size=self.data_size if (self.data_size > 0);
 	};
 };
@@ -150,7 +132,6 @@ type SummaryLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, ar
 type SummaryLSAItem = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
 	netmask: addr &ipv4;
     metric: uint32;
-    TOS: uint32;
 };
 
 type ExternalLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {

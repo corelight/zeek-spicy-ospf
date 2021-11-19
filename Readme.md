@@ -18,7 +18,7 @@ Testing PCAPs sources:
 * https://packetlife.net/captures/protocol/ospf/
     * https://packetlife.net/media/captures/OSPF_LSA_types.cap
 
-### Example Log:
+### Example Logs:
 
 ```
 #separator \x09
@@ -53,6 +53,37 @@ Testing PCAPs sources:
 1098361220.858006	192.168.170.2	224.0.0.6	Link State Update	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
 1098361220.858006	192.168.170.2	224.0.0.6	Link State Update	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
 #close	2021-11-19-17-23-59
+```
+
+```
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	ospf
+#open	2021-11-19-21-08-30
+#fields	ts	ip_src	ip_dst	ospf_type	router_id	area_id	link_state_id	advert_router	netmask	routers	link_id	link_data	link_type	lsa_type	fwd_addr	route_tag
+#types	time	addr	addr	string	addr	addr	addr	addr	addr	vector[addr]	addr	addr	string	string	addr	count
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	5.5.5.5	5.5.5.5	-	-	192.168.20.0	255.255.255.0	Stub	Router	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	5.5.5.5	5.5.5.5	-	-	10.0.20.2	10.0.20.2	Transit	Router	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	4.4.4.4	4.4.4.4	-	-	10.0.20.0	255.255.255.252	Stub	Router	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	10.0.20.2	5.5.5.5	255.255.255.252	5.5.5.5,4.4.4.4	-	-	-	Network	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	192.168.10.0	4.4.4.4	255.255.255.0	-	-	-	-	Summary IP	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	10.0.10.0	4.4.4.4	255.255.255.252	-	-	-	-	Summary IP	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	10.0.0.0	4.4.4.4	255.255.255.252	-	-	-	-	Summary IP	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	2.2.2.2	4.4.4.4	0.0.0.0	-	-	-	-	Summary ASBR	-	-
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.3.0	2.2.2.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.2.0	2.2.2.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.1.0	2.2.2.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1213679915.828110	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.0.0	2.2.2.2	255.255.255.252	-	-	-	-	External	0.0.0.0	0
+1213679915.840078	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	192.168.20.0	255.255.255.0	Stub	Router	-	-
+1213679915.840078	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	10.0.20.0	255.255.255.252	Stub	Router	-	-
+1213679915.888070	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	10.0.20.2	5.5.5.5	255.255.255.252	5.5.5.5,4.4.4.4	-	-	-	Network	-	-
+1213679916.380138	10.0.20.1	224.0.0.5	Link State Update	4.4.4.4	0.0.0.20	4.4.4.4	4.4.4.4	-	-	10.0.20.2	10.0.20.1	Transit	Router	-	-
+1213679920.832374	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	192.168.20.0	255.255.255.0	Stub	Router	-	-
+1213679920.832374	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	10.0.20.2	10.0.20.2	Transit	Router	-	-
+1213679920.880373	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	10.0.20.2	5.5.5.5	255.255.255.252	5.5.5.5,4.4.4.4	-	-	-	Network	-	-
+1213679921.268421	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	4.4.4.4	4.4.4.4	-	-	10.0.20.2	10.0.20.1	Transit	Router	-	-
 ```
 
 ### License:

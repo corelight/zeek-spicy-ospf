@@ -10,6 +10,6 @@ on zeek_spicy_ospf::RouterLSALink -> event OSPF::router_lsa_link($packet, ls_typ
 
 on zeek_spicy_ospf::NetworkLSA -> event OSPF::network_lsa($packet, ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.routers);
 
-on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item($packet, ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.metric, self.TOS);
+on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item($packet, ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.metric);
 
 on zeek_spicy_ospf::ExternalLSAItem -> event OSPF::external_lsa_item($packet, ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, netmask, self.metric, self.fwd_addr, self.route_tag);
