@@ -15,12 +15,8 @@ Testing PCAPs sources:
 
 * https://wiki.wireshark.org/SampleCaptures
     * https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=ospf.cap
-    * https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=ospf-md5.cap
-    * https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=hsrp-and-ospf-in-LAN
-    * https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=mpls-te.cap
 * https://packetlife.net/captures/protocol/ospf/
-    * https://packetlife.net/media/captures/OSPF_with_MD5_auth.cap
-* https://www.cloudshark.org/captures/111cb2076caa
+    * https://packetlife.net/media/captures/OSPF_LSA_types.cap
 
 ### Example Log:
 
