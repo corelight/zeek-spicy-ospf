@@ -6,10 +6,10 @@ import Zeek_zeek_spicy_ospf;
 
 on zeek_spicy_ospf::OSPFPacket -> event OSPF::message(self.version, self.ospf_type, self.router_id, self.area_id, self.autype, self.auth);
 
-on zeek_spicy_ospf::RouterLSALink -> event OSPF::router_lsa_link(ospf_type, router_id, area_id, link_state_id, advert_router, self.link_id, self.link_data, self.link_type);
+on zeek_spicy_ospf::RouterLSALink -> event OSPF::router_lsa_link(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, self.link_id, self.link_data, self.link_type);
 
-on zeek_spicy_ospf::NetworkLSA -> event OSPF::network_lsa(ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.routers);
+on zeek_spicy_ospf::NetworkLSA -> event OSPF::network_lsa(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.routers);
 
-on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item(ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.metric, self.TOS);
+on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, self.netmask, self.metric, self.TOS);
 
-on zeek_spicy_ospf::ExternalLSAItem -> event OSPF::external_lsa_item(ospf_type, router_id, area_id, link_state_id, advert_router, netmask, self.metric, self.fwd_addr, self.route_tag);
+on zeek_spicy_ospf::ExternalLSAItem -> event OSPF::external_lsa_item(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router, netmask, self.metric, self.fwd_addr, self.route_tag);

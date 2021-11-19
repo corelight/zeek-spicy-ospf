@@ -110,16 +110,16 @@ type LSAHeader = unit(ospf_type: MsgType, router_id: addr, area_id: addr, is_des
 type LSAHeaderData = unit(ospf_type: MsgType, router_id: addr, area_id: addr, ls_type: LSAType, length: uint16, link_state_id: addr, advert_router: addr) {
     switch ( ls_type ) 
         {
-        LSAType::Router -> router: RouterLSA(ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::Network -> network: NetworkLSA(ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::Summary_IP -> summary_ip: SummaryLSA(ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::Summary_ASBR -> summary_asbr: SummaryLSA(ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::External -> external: ExternalLSA(ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
+        LSAType::Router -> router: RouterLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
+        LSAType::Network -> network: NetworkLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
+        LSAType::Summary_IP -> summary_ip: SummaryLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
+        LSAType::Summary_ASBR -> summary_asbr: SummaryLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
+        LSAType::External -> external: ExternalLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
         * -> payload: bytes &size=length;
         };
 };
 
-type RouterLSA = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type RouterLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
     flags: bitfield(8) {
         V: 2;
         E: 1;
@@ -127,10 +127,10 @@ type RouterLSA = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_s
 	};
     : uint8;
     num_links: uint16;
-    links: RouterLSALink(ospf_type, router_id, area_id, link_state_id, advert_router)[self.num_links];
+    links: RouterLSALink(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router)[self.num_links];
 };
 
-type RouterLSALink = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type RouterLSALink = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
     link_id: addr &ipv4;
     link_data: addr &ipv4;
     link_type: uint8 &convert=RouterLSAType($$);
@@ -138,27 +138,27 @@ type RouterLSALink = unit(ospf_type: MsgType, router_id: addr, area_id: addr, li
     metric: uint16;
 };
 
-type NetworkLSA = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type NetworkLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
 	netmask: addr &ipv4;
     routers: addr[] &ipv4 &eod;
 };
 
-type SummaryLSA = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
-    summaries: SummaryLSAItem(ospf_type, router_id, area_id, link_state_id, advert_router)[] &eod;
+type SummaryLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+    summaries: SummaryLSAItem(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router)[] &eod;
 };
 
-type SummaryLSAItem = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type SummaryLSAItem = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
 	netmask: addr &ipv4;
     metric: uint32;
     TOS: uint32;
 };
 
-type ExternalLSA = unit(ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type ExternalLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
 	netmask: addr &ipv4;
-    ext_lsas: ExternalLSAItem(ospf_type, router_id, area_id, self.netmask, link_state_id, advert_router)[] &eod;
+    ext_lsas: ExternalLSAItem(ls_type, ospf_type, router_id, area_id, self.netmask, link_state_id, advert_router)[] &eod;
 };
 
-type ExternalLSAItem = unit(ospf_type: MsgType, router_id: addr, area_id: addr, netmask: addr, link_state_id: addr, advert_router: addr) {
+type ExternalLSAItem = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, netmask: addr, link_state_id: addr, advert_router: addr) {
     metric: uint32;
     fwd_addr: addr &ipv4;
     route_tag: uint32;
