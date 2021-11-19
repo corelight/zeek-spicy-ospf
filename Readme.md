@@ -30,33 +30,33 @@ Testing PCAPs sources:
 #empty_field	(empty)
 #unset_field	-
 #path	ospf
-#open	2021-11-19-12-39-39
+#open	2021-11-19-12-58-00
 #fields	ts	ospf_type	router_id	area_id	link_state_id	advert_router	netmask	routers	link_id	link_data	link_type	lsa_type	fwd_addr	route_tag
-#types	time	enum	addr	addr	addr	addr	addr	vector[addr]	addr	addr	enum	enum	addr	count
-1098361214.418357	zeek_spicy_ospf::MsgType_LSU	192.168.170.8	0.0.0.1	192.168.170.8	192.168.170.8	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	80.212.16.0	192.168.170.2	255.255.255.255	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	148.121.171.0	192.168.170.2	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	192.168.170.1	0
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.130.120.0	192.168.170.2	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.0.0	192.168.170.2	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.1.0	192.168.170.2	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420459	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.172.0	192.168.170.2	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	192.168.170.10	0
-1098361214.420698	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	148.121.171.0	192.168.170.3	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	192.168.170.1	0
-1098361214.420698	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.130.120.0	192.168.170.3	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420698	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.0.0	192.168.170.3	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420698	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.1.0	192.168.170.3	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.420698	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.172.0	192.168.170.3	255.255.255.0	-	-	-	-	zeek_spicy_ospf::LSAType_External	192.168.170.10	0
-1098361214.420698	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	80.212.16.0	192.168.170.3	255.255.255.255	-	-	-	-	zeek_spicy_ospf::LSAType_External	0.0.0.0	0
-1098361214.450077	zeek_spicy_ospf::MsgType_LSU	192.168.170.8	0.0.0.1	192.168.170.8	192.168.170.8	255.255.255.0	192.168.170.3,192.168.170.8	-	-	-	zeek_spicy_ospf::LSAType_Network	-	-
-1098361214.450161	zeek_spicy_ospf::MsgType_LSU	192.168.170.8	0.0.0.1	192.168.170.8	192.168.170.8	-	-	192.168.170.8	192.168.170.8	zeek_spicy_ospf::RouterLSAType_Transit	zeek_spicy_ospf::LSAType_Router	-	-
-1098361218.427849	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361218.427849	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361219.417823	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361219.417823	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361220.858006	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-1098361220.858006	zeek_spicy_ospf::MsgType_LSU	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	zeek_spicy_ospf::RouterLSAType_Stub	zeek_spicy_ospf::LSAType_Router	-	-
-#close	2021-11-19-12-39-39
+#types	time	string	addr	addr	addr	addr	addr	vector[addr]	addr	addr	string	string	addr	count
+1098361214.418357	Link State Update	192.168.170.8	0.0.0.1	192.168.170.8	192.168.170.8	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	80.212.16.0	192.168.170.2	255.255.255.255	-	-	-	-	External	0.0.0.0	0
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	148.121.171.0	192.168.170.2	255.255.255.0	-	-	-	-	External	192.168.170.1	0
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	192.130.120.0	192.168.170.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	192.168.0.0	192.168.170.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	192.168.1.0	192.168.170.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1098361214.420459	Link State Update	192.168.170.3	0.0.0.1	192.168.172.0	192.168.170.2	255.255.255.0	-	-	-	-	External	192.168.170.10	0
+1098361214.420698	Link State Update	192.168.170.3	0.0.0.1	148.121.171.0	192.168.170.3	255.255.255.0	-	-	-	-	External	192.168.170.1	0
+1098361214.420698	Link State Update	192.168.170.3	0.0.0.1	192.130.120.0	192.168.170.3	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1098361214.420698	Link State Update	192.168.170.3	0.0.0.1	192.168.0.0	192.168.170.3	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1098361214.420698	Link State Update	192.168.170.3	0.0.0.1	192.168.1.0	192.168.170.3	255.255.255.0	-	-	-	-	External	0.0.0.0	0
+1098361214.420698	Link State Update	192.168.170.3	0.0.0.1	192.168.172.0	192.168.170.3	255.255.255.0	-	-	-	-	External	192.168.170.10	0
+1098361214.420698	Link State Update	192.168.170.3	0.0.0.1	80.212.16.0	192.168.170.3	255.255.255.255	-	-	-	-	External	0.0.0.0	0
+1098361214.450077	Link State Update	192.168.170.8	0.0.0.1	192.168.170.8	192.168.170.8	255.255.255.0	192.168.170.3,192.168.170.8	-	-	-	Network	-	-
+1098361214.450161	Link State Update	192.168.170.8	0.0.0.1	192.168.170.8	192.168.170.8	-	-	192.168.170.8	192.168.170.8	Transit	Router	-	-
+1098361218.427849	Link State Update	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361218.427849	Link State Update	192.168.170.3	0.0.0.1	192.168.170.3	192.168.170.3	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361219.417823	Link State Update	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361219.417823	Link State Update	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361220.858006	Link State Update	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+1098361220.858006	Link State Update	192.168.170.3	0.0.0.1	192.168.170.2	192.168.170.2	-	-	192.168.170.0	255.255.255.0	Stub	Router	-	-
+#close	2021-11-19-12-58-00
 ```
 
 ### License:
