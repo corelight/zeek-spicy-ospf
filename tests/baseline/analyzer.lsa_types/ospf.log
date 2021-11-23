@@ -6,26 +6,38 @@
 #unset_field	-
 #path	ospf
 #open XXXX-XX-XX-XX-XX-XX
-#fields	ts	ip_src	ip_dst	ospf_type	router_id	area_id	link_state_id	advert_router	netmask	routers	link_id	link_data	link_type	lsa_type	fwd_addr	route_tag
-#types	time	addr	addr	string	addr	addr	addr	addr	addr	vector[addr]	addr	addr	string	string	addr	count
+#fields	ts	ip_src	ip_dst	ospf_type	version	router_id	area_id	interface_id	netmask	desig_router	backup_router	neighbors	lsa_type	link_state_id	advert_router	routers	link_id	link_data	link_type	neighbor_router_id	metrics	fwd_addrs	route_tags	neighbor_interface_id	prefix	metric	dest_router_id	link_prefixes	intra_prefixes
+#types	time	addr	addr	string	count	addr	addr	count	addr	addr	addr	vector[addr]	string	addr	addr	vector[addr]	addr	addr	string	addr	vector[count]	vector[addr]	vector[count]	count	subnet	count	addr	set[subnet]	set[subnet]
 #close XXXX-XX-XX-XX-XX-XX
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	10.0.0.0	4.4.4.4	255.255.255.252	-	-	-	-	Summary IP	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	10.0.10.0	4.4.4.4	255.255.255.252	-	-	-	-	Summary IP	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	10.0.20.2	5.5.5.5	255.255.255.252	5.5.5.5,4.4.4.4	-	-	-	Network	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.0.0	2.2.2.2	255.255.255.252	-	-	-	-	External	0.0.0.0	0
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.1.0	2.2.2.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.2.0	2.2.2.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	172.16.3.0	2.2.2.2	255.255.255.0	-	-	-	-	External	0.0.0.0	0
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	192.168.10.0	4.4.4.4	255.255.255.0	-	-	-	-	Summary IP	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	2.2.2.2	4.4.4.4	0.0.0.0	-	-	-	-	Summary ASBR	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	4.4.4.4	4.4.4.4	-	-	10.0.20.0	255.255.255.252	Stub	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	5.5.5.5	5.5.5.5	-	-	10.0.20.2	10.0.20.2	Transit	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	5.5.5.5	5.5.5.5	-	-	192.168.20.0	255.255.255.0	Stub	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	10.0.20.0	255.255.255.252	Stub	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	192.168.20.0	255.255.255.0	Stub	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	10.0.20.2	5.5.5.5	255.255.255.252	5.5.5.5,4.4.4.4	-	-	-	Network	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Link State Update	4.4.4.4	0.0.0.20	4.4.4.4	4.4.4.4	-	-	10.0.20.2	10.0.20.1	Transit	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	10.0.20.2	10.0.20.2	Transit	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	5.5.5.5	5.5.5.5	-	-	192.168.20.0	255.255.255.0	Stub	Router	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	5.5.5.5	0.0.0.20	10.0.20.2	5.5.5.5	255.255.255.252	5.5.5.5,4.4.4.4	-	-	-	Network	-	-
-XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	4.4.4.4	0.0.0.20	4.4.4.4	4.4.4.4	-	-	10.0.20.2	10.0.20.1	Transit	Router	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	0.0.0.0	0.0.0.0	(empty)	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	10.0.20.2	0.0.0.0	(empty)	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	10.0.20.2	0.0.0.0	(empty)	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Hello	2	4.4.4.4	0.0.0.20	-	255.255.255.252	0.0.0.0	0.0.0.0	(empty)	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	10.0.20.2	0.0.0.0	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Hello	2	4.4.4.4	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	5.5.5.5	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	-	-	-	-	Router	4.4.4.4	4.4.4.4	-	10.0.20.0	255.255.255.252	Stub	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	-	-	-	-	Router	5.5.5.5	5.5.5.5	-	10.0.20.2	10.0.20.2	Transit	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	-	-	-	-	Router	5.5.5.5	5.5.5.5	-	192.168.20.0	255.255.255.0	Stub	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	0.0.0.0	-	-	-	Summary ASBR	2.2.2.2	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.0	-	-	-	External	172.16.1.0	2.2.2.2	-	-	-	-	-	2147483748,2147483748,2147483748	0.0.0.0,0.0.0.0,0.0.0.0	0,0,0	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.0	-	-	-	External	172.16.2.0	2.2.2.2	-	-	-	-	-	2147483748,2147483748	0.0.0.0,0.0.0.0	0,0	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.0	-	-	-	External	172.16.3.0	2.2.2.2	-	-	-	-	-	2147483748	0.0.0.0	0	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.0	-	-	-	Summary IP	192.168.10.0	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.252	-	-	-	External	172.16.0.0	2.2.2.2	-	-	-	-	-	2147483748,2147483748,2147483748,2147483748	0.0.0.0,0.0.0.0,0.0.0.0,0.0.0.0	0,0,0,0	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.252	-	-	-	Network	10.0.20.2	5.5.5.5	5.5.5.5,4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.252	-	-	-	Summary IP	10.0.0.0	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	255.255.255.252	-	-	-	Summary IP	10.0.10.0	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	2	5.5.5.5	0.0.0.20	-	-	-	-	-	Router	5.5.5.5	5.5.5.5	-	10.0.20.0	255.255.255.252	Stub	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	2	5.5.5.5	0.0.0.20	-	-	-	-	-	Router	5.5.5.5	5.5.5.5	-	192.168.20.0	255.255.255.0	Stub	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	2	5.5.5.5	0.0.0.20	-	255.255.255.252	-	-	-	Network	10.0.20.2	5.5.5.5	5.5.5.5,4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Link State Update	2	4.4.4.4	0.0.0.20	-	-	-	-	-	Router	4.4.4.4	4.4.4.4	-	10.0.20.2	10.0.20.1	Transit	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	2	5.5.5.5	0.0.0.20	-	-	-	-	-	Router	5.5.5.5	5.5.5.5	-	10.0.20.2	10.0.20.2	Transit	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	2	5.5.5.5	0.0.0.20	-	-	-	-	-	Router	5.5.5.5	5.5.5.5	-	192.168.20.0	255.255.255.0	Stub	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Link State Update	2	5.5.5.5	0.0.0.20	-	255.255.255.252	-	-	-	Network	10.0.20.2	5.5.5.5	5.5.5.5,4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	10.0.20.2	Link State Update	2	4.4.4.4	0.0.0.20	-	-	-	-	-	Router	4.4.4.4	4.4.4.4	-	10.0.20.2	10.0.20.1	Transit	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Hello	2	4.4.4.4	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	5.5.5.5	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Hello	2	4.4.4.4	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	5.5.5.5	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.2	224.0.0.5	Hello	2	5.5.5.5	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	4.4.4.4	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-
+XXXXXXXXXX.XXXXXX	10.0.20.1	224.0.0.5	Hello	2	4.4.4.4	0.0.0.20	-	255.255.255.252	10.0.20.2	10.0.20.1	5.5.5.5	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-

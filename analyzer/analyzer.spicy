@@ -1,5 +1,22 @@
 module zeek_spicy_ospf;
 
+public type OSPFPacket = unit {
+    version: uint8;
+    ospf_type: uint8 &convert=MsgType($$);
+    packet_length: uint16 &requires=($$ >= 14);
+    router_id: addr &ipv4;
+    area_id: addr &ipv4;
+    checksum: uint16;
+
+	switch ( self.version ) {
+		2 -> ospfv2: OSPFPacketV2(self) &size=self.packet_length-14;
+		3 -> ospfv3: OSPFPacketV3(self) &size=self.packet_length-14;
+        * -> payload: bytes &size=self.packet_length-14 if (self.packet_length-14 > 0);
+	};
+};
+
+### OSPF v2 https://datatracker.ietf.org/doc/html/rfc2328#appendix-A.3.1 ###
+
 public type MsgType = enum {
 	Hello	            = 1,
 	DB_Desc	            = 2,
@@ -23,40 +40,37 @@ public type RouterLSAType = enum {
 	Virtual	            = 4,
 };
 
-public type OSPFPacket = unit {
-    version: uint8;
-    ospf_type: uint8 &convert=MsgType($$);
-    packet_length: uint16 &requires=($$ >= 24) { self.data_size = $$-24; }
-    router_id: addr &ipv4;
-    area_id: addr &ipv4;
-    checksum: uint16;
+public type OSPFPacketV2 = unit(parent: OSPFPacket) {
     autype: uint16;
     auth: uint64;
 
-    var data_size: uint16;
+    var len: uint16 = parent.packet_length-24 &requires=(parent.packet_length >= 24);
 
-	switch ( self.ospf_type ) {
-		MsgType::Hello -> hello: HelloPacket(self.ospf_type, self.router_id, self.area_id);
-		MsgType::DB_Desc -> dd_desc: Database(self.ospf_type, self.router_id, self.area_id, self.data_size);
-		MsgType::LSR -> lsr: LinkRequest(self.ospf_type, self.router_id, self.area_id);
-		MsgType::LSU -> lsu: LinkUpdate(self.ospf_type, self.router_id, self.area_id);
-		MsgType::LSAck -> lsack: LinkAck(self.ospf_type, self.router_id, self.area_id, self.data_size);
-        * -> payload: bytes &size=self.data_size if (self.data_size > 0);
+	switch ( parent.ospf_type ) {
+		MsgType::Hello -> hello: HelloPacket(parent);
+		MsgType::DB_Desc -> dd_desc: Database(parent, self.len);
+		MsgType::LSR -> lsr: LinkRequest(parent);
+		MsgType::LSU -> lsu: LinkUpdate(parent);
+		MsgType::LSAck -> lsack: LinkAck(parent, self.len);
+        * -> payload: bytes &size=self.len if (self.len > 0);
 	};
 };
 
-type HelloPacket = unit(ospf_type: MsgType, router_id: addr, area_id: addr) { 
+type HelloPacket = unit(parent: OSPFPacket) { 
 	netmask: addr &ipv4;
 	hello_int: uint16;
-	options: uint8;
+    opts: bitfield(8) {
+        has_lls_data_block: 4;
+	};
 	router_priority: uint8;
 	dead_int: uint32;
 	desig_router: addr &ipv4;
 	backup_router: addr &ipv4;
-    neighbor: bytes &eod;
+    neighbors: addr[] &ipv4 &eod;
+    lls_data_block: bytes &eod if (self.opts.has_lls_data_block);
 };
 
-type Database = unit(ospf_type: MsgType, router_id: addr, area_id: addr, length: uint16) { 
+type Database = unit(parent: OSPFPacket, length: uint16) { 
     MTU: uint16;
     opts: bitfield(8) {
         has_lls_data_block: 4;
@@ -67,17 +81,11 @@ type Database = unit(ospf_type: MsgType, router_id: addr, area_id: addr, length:
         MS: 0;
 	};
     seq_num: uint32;
-    lsa_header: LSAHeader(ospf_type, router_id, area_id, True)[] &size=(length-8) if (length - 8 > 0);
-    lls_data_block: LLSDataBlock if (self.opts.has_lls_data_block);
+    lsa_header: LSAHeader(parent, True)[] &size=(length-8) if (length - 8 > 0);
+    lls_data_block: bytes &eod if (self.opts.has_lls_data_block);
 };
 
-type LLSDataBlock = unit { 
-    checksum: uint16;
-    lls_data_len: uint16;
-    lls_data: bytes &size=self.lls_data_len;
-};
-
-type LSAHeader = unit(ospf_type: MsgType, router_id: addr, area_id: addr, is_desc: bool) {
+type LSAHeader = unit(parent: OSPFPacket, is_desc: bool) {
     age: uint16;
     opts: uint8;
     ls_type: uint8 &convert=LSAType($$);
@@ -86,22 +94,22 @@ type LSAHeader = unit(ospf_type: MsgType, router_id: addr, area_id: addr, is_des
     seq_num: uint32;
     checksum: uint16;
     length: uint16;
-    data: LSAHeaderData(ospf_type, router_id, area_id, self.ls_type, self.length-20, self.link_state_id, self.advert_router) &size=self.length-20 if (!is_desc && self.length-20 > 0);
+    data: LSAHeaderData(parent, self) &size=self.length-20 if (!is_desc && self.length-20 > 0);
 };
     
-type LSAHeaderData = unit(ospf_type: MsgType, router_id: addr, area_id: addr, ls_type: LSAType, length: uint16, link_state_id: addr, advert_router: addr) {
-    switch ( ls_type ) 
+type LSAHeaderData = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
+    switch ( lsaheader.ls_type ) 
         {
-        LSAType::Router -> router: RouterLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::Network -> network: NetworkLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::Summary_IP -> summary_ip: SummaryLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::Summary_ASBR -> summary_asbr: SummaryLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        LSAType::External -> external: ExternalLSA(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router) &size=length;
-        * -> payload: bytes &size=length;
+        LSAType::Router -> router: RouterLSA(parent, lsaheader) &size=lsaheader.length-20;
+        LSAType::Network -> network: NetworkLSA(parent, lsaheader) &size=lsaheader.length-20;
+        LSAType::Summary_IP -> summary_ip: SummaryLSA(parent, lsaheader) &size=lsaheader.length-20;
+        LSAType::Summary_ASBR -> summary_asbr: SummaryLSA(parent, lsaheader) &size=lsaheader.length-20;
+        LSAType::External -> external: ExternalLSA(parent, lsaheader) &size=lsaheader.length-20;
+        * -> payload: bytes &size=lsaheader.length-20;
         };
 };
 
-type RouterLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type RouterLSA = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
     flags: bitfield(8) {
         V: 2;
         E: 1;
@@ -109,10 +117,10 @@ type RouterLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, are
 	};
     : uint8;
     num_links: uint16;
-    links: RouterLSALink(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router)[self.num_links];
+    links: RouterLSALink(parent, lsaheader)[self.num_links];
 };
 
-type RouterLSALink = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type RouterLSALink = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
     link_id: addr &ipv4;
     link_data: addr &ipv4;
     link_type: uint8 &convert=RouterLSAType($$);
@@ -120,46 +128,234 @@ type RouterLSALink = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr,
     metric: uint16;
 };
 
-type NetworkLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type NetworkLSA = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
 	netmask: addr &ipv4;
     routers: addr[] &ipv4 &eod;
 };
 
-type SummaryLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
-    summaries: SummaryLSAItem(ls_type, ospf_type, router_id, area_id, link_state_id, advert_router)[] &eod;
+type SummaryLSA = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
+    summaries: SummaryLSAItem(parent, lsaheader)[] &eod;
 };
 
-type SummaryLSAItem = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type SummaryLSAItem = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
 	netmask: addr &ipv4;
     metric: uint32;
 };
 
-type ExternalLSA = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr) {
+type ExternalLSA = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
 	netmask: addr &ipv4;
-    ext_lsas: ExternalLSAItem(ls_type, ospf_type, router_id, area_id, self.netmask, link_state_id, advert_router)[] &eod;
+    ext_lsas: ExternalLSAItem(parent, lsaheader)[] &eod;
 };
 
-type ExternalLSAItem = unit(ls_type: LSAType, ospf_type: MsgType, router_id: addr, area_id: addr, netmask: addr, link_state_id: addr, advert_router: addr) {
+type ExternalLSAItem = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
     metric: uint32;
     fwd_addr: addr &ipv4;
     route_tag: uint32;
 };
 
-type LinkRequest = unit (ospf_type: MsgType, router_id: addr, area_id: addr) { 
-    link_requests: LinkRequestItem(ospf_type, router_id, area_id)[] &eod;
+type LinkRequest = unit (parent: OSPFPacket) { 
+    link_requests: LinkRequestItem(parent)[] &eod;
 };
 
-type LinkRequestItem = unit (ospf_type: MsgType, router_id: addr, area_id: addr) { 
+type LinkRequestItem = unit (parent: OSPFPacket) { 
     ls_type: uint32;
     link_state_id: addr &ipv4;
     advert_router: addr &ipv4;
 };
 
-type LinkUpdate = unit (ospf_type: MsgType, router_id: addr, area_id: addr) { 
+type LinkUpdate = unit (parent: OSPFPacket) { 
     num_lsas: uint32;
-    lsas: LSAHeader(ospf_type, router_id, area_id, False)[self.num_lsas];
+    lsas: LSAHeader(parent, False)[self.num_lsas];
 };
 
-type LinkAck = unit (ospf_type: MsgType, router_id: addr, area_id: addr, length: uint16) { 
-    lsa_headers: LSAHeader(ospf_type, router_id, area_id, True)[] &size=length;
+type LinkAck = unit (parent: OSPFPacket, length: uint16) { 
+    lsa_headers: LSAHeader(parent, True)[] &size=length;
+};
+
+### OSPF v3 https://datatracker.ietf.org/doc/html/rfc2740#appendix-A.1 ###
+
+public type OSPFPacketV3 = unit(parent: OSPFPacket) {
+    instance_id: uint8;
+    : uint8;
+
+    var len: uint16 = parent.packet_length-16 &requires=(parent.packet_length >= 16);
+
+	switch ( parent.ospf_type ) {
+		MsgType::Hello -> hello: HelloPacketV3(parent);
+		MsgType::DB_Desc -> dd_desc: DatabaseV3(parent, self.len);
+#		MsgType::LSR -> lsr: LinkRequest(parent);
+		MsgType::LSU -> lsu: LinkUpdateV3(parent);
+#		MsgType::LSAck -> lsack: LinkAck(parent, self.len);
+        * -> payload: bytes &size=self.len if (self.len > 0);
+	};
+};
+
+type HelloPacketV3 = unit(parent: OSPFPacket) { 
+	interface_id: uint32;
+    options_and_priority: uint32;
+	hello_int: uint16;
+	dead_int: uint16;
+	desig_router: addr &ipv4;
+	backup_router: addr &ipv4;
+    neighbors: addr[] &ipv4 &eod;
+};
+
+type DatabaseV3 = unit(parent: OSPFPacket, length: uint16) { 
+    options: uint32;
+    MTU: uint16;
+    : uint8;
+    flags: bitfield(8) {
+        I: 2;
+        M: 1;
+        MS: 0;
+	};
+    seq_num: uint32;
+    lsa_header: LSAHeaderV3(parent, True)[] &size=(length-12) if (length - 12 > 0);
+};
+
+public type LSATypeV3 = enum {
+	Router	            = 1,
+	Network	            = 2,
+	IA_Prefix	        = 3,
+	IA_Router   	    = 4,
+	External		    = 5,
+    Group_Membership    = 6,
+    Type_Seven          = 7,
+    Link                = 8,
+    IntraA_Prefix       = 9,
+};
+
+type LSAHeaderV3 = unit(parent: OSPFPacket, is_desc: bool) {
+    age: uint16;
+    ls_type: bitfield(16) {
+        ls_type: 0..12 &convert=LSATypeV3($$);
+        S1: 13;
+        S2: 14;
+        U: 15;
+	};
+    link_state_id: addr &ipv4;
+    advert_router: addr &ipv4;
+    seq_num: uint32;
+    checksum: uint16;
+    length: uint16;
+    data: LSAHeaderDataV3(parent, self) &size=self.length-20 if (!is_desc && self.length-20 > 0);
+};
+
+type LSAHeaderDataV3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    switch ( lsaheader.ls_type.ls_type ) 
+        {
+        LSATypeV3::Router -> router: RouterLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::Network -> network: NetworkLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::IA_Prefix -> ia_prefix: IA_Prefix(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::IA_Router -> ia_router: IA_Router(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::External -> external: ExternalLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::Link -> link: LinkLSA(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::IntraA_Prefix -> intra_prefix: IntraPrefixes(parent, lsaheader) &size=lsaheader.length-20;
+        * -> payload: bytes &size=lsaheader.length-20;
+        };
+};
+
+type RouterLSA_V3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    flags: bitfield(32) {
+        W: 27;
+        V: 26;
+        E: 25;
+        B: 24;
+        options: 0..23;
+	};
+    links: RouterLSALinkV3(parent, lsaheader)[] &size=lsaheader.length-24 if (lsaheader.length-24 > 0);
+};
+
+type RouterLSALinkV3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    link_type: uint8 &convert=RouterLSAType($$);
+    : uint8;
+    metric: uint16;
+    interface_id: uint32;
+    neighbor_interface_id: uint32;
+    neighbor_router_id: addr &ipv4;
+};
+
+type NetworkLSA_V3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    flags: bitfield(32) {
+        W: 27;
+        V: 26;
+        E: 25;
+        B: 24;
+        options: 0..23;
+	};
+    routers: addr[] &ipv4 &size=lsaheader.length-24 if (lsaheader.length-24 > 0);
+};
+
+type IA_Prefix = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    metric: uint32;
+    prefix: Prefix;
+};
+
+function bits_to_words(x: uint8) : uint8 {
+    local a = x / 32;
+    local r = x % 32;
+
+    if (r == 0)
+        return a;
+    else
+        return a+1;
+}
+
+type Prefix = unit {
+    prefix_len: uint8 { self.prefix_words=bits_to_words($$); }
+    var prefix_words: uint8;
+    options: uint8;
+    reserved: uint16;
+    prefix_data: bytes &size=self.prefix_words*4 if (self.prefix_words > 0);
+};
+
+type IA_Router = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    options: uint32;
+    metric: uint32;
+    router_id: uint32;
+};
+
+type ExternalLSA_V3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    flags: bitfield(32) {
+        E: 27;
+        F: 26;
+        T: 25;
+        metric: 0..24;
+	};
+    prefix: Prefix;
+    var fwd: addr;
+    fwd_addr: addr &ipv6 if (self.flags.F != 0) { self.fwd = $$; }
+    route_tag: uint32 if (self.flags.T != 0);
+    ref_link_state_id: uint32 if (self.prefix.reserved != 0);
+};
+
+type LinkLSA = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    flags: bitfield(32) {
+        router_priority: 24..31;
+        options: 0..23;
+	};
+    link_local_addr: addr &ipv6;
+    num_prefixes: uint32;
+    prefixes: LinkPrefix[self.num_prefixes];
+};
+
+type LinkPrefix = unit {
+    prefix: Prefix();
+};
+
+type IntraPrefixes = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
+    num_prefixes: uint16;
+    ref_ls_type: uint16;
+    ref_link_state_id: uint32;
+    ref_adv_router: uint32;
+    prefixes: IntraPrefix[self.num_prefixes];
+};
+
+type IntraPrefix = unit {
+    prefix: Prefix();
+};
+
+type LinkUpdateV3 = unit (parent: OSPFPacket) { 
+    num_lsas: uint32;
+    lsas: LSAHeaderV3(parent, False)[self.num_lsas];
 };
