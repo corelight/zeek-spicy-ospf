@@ -110,10 +110,3 @@ Testing PCAPs sources:
 1220202905.453721       fe80::1 ff02::5 Hello   3       1.1.1.1 0.0.0.1 5       -       2.2.2.2 1.1.1.1 2.2.2.2 -       -       -       -       -       -       -       -       -       -       -       -       -       -       -       -       -
 #close  2021-11-23-07-32-16
 ```
-
-### License:
-
-Creative Commons BY-SA
-
-https://creativecommons.org/licenses/by-sa/4.0/
-
