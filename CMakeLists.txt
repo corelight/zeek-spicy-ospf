@@ -10,7 +10,7 @@ spicy_require_version("1.2.0")
 spicy_plugin_require_version("1.3.3")
 zeek_require_version("4.0.0")
 
-if ( NOT CMAKE_BUILD_TYPE )
+if (NOT CMAKE_BUILD_TYPE)
     # Default to release build.
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
 endif ()

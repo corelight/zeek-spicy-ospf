@@ -6,50 +6,50 @@ import Zeek_zeek_spicy_ospf;
 
 on zeek_spicy_ospf::OSPFPacket -> event OSPF::message($packet, self.version, self.ospf_type, self.router_id, self.area_id);
 
-on zeek_spicy_ospf::HelloPacket -> event OSPF::hello($packet, 2, parent.router_id, parent.area_id, self.netmask, 0, self.desig_router, 
+on zeek_spicy_ospf::HelloPacket -> event OSPF::hello($packet, 2, parent.router_id, parent.area_id, self.netmask, 0, self.desig_router,
                                                      self.backup_router, self.neighbors);
 
-on zeek_spicy_ospf::HelloPacketV3 -> event OSPF::hello($packet, 3, parent.router_id, parent.area_id, 0.0.0.0, self.interface_id, self.desig_router, 
+on zeek_spicy_ospf::HelloPacketV3 -> event OSPF::hello($packet, 3, parent.router_id, parent.area_id, 0.0.0.0, self.interface_id, self.desig_router,
                                                        self.backup_router, self.neighbors);
 
-on zeek_spicy_ospf::RouterLSALink -> event OSPF::router_lsa_link($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::RouterLSALink -> event OSPF::router_lsa_link($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                                  lsaheader.link_state_id, lsaheader.advert_router, self.link_id, self.link_data, self.link_type);
 
-on zeek_spicy_ospf::RouterLSALinkV3 -> event OSPF::router_lsa_link_v3($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
-                                                                      lsaheader.link_state_id, lsaheader.advert_router, self.link_type, self.interface_id, 
+on zeek_spicy_ospf::RouterLSALinkV3 -> event OSPF::router_lsa_link_v3($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
+                                                                      lsaheader.link_state_id, lsaheader.advert_router, self.link_type, self.interface_id,
                                                                       self.neighbor_interface_id, self.neighbor_router_id);
 
-on zeek_spicy_ospf::NetworkLSA -> event OSPF::network_lsa($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::NetworkLSA -> event OSPF::network_lsa($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                           lsaheader.link_state_id, lsaheader.advert_router, self.netmask, self.routers);
 
-on zeek_spicy_ospf::NetworkLSA_V3 -> event OSPF::network_lsa($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::NetworkLSA_V3 -> event OSPF::network_lsa($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                              lsaheader.link_state_id, lsaheader.advert_router, 0.0.0.0, self.routers);
 
-on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::SummaryLSAItem -> event OSPF::summary_lsa_item($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                                    lsaheader.link_state_id, lsaheader.advert_router, self.netmask, self.metric);
 
-on zeek_spicy_ospf::ExternalLSA -> event OSPF::external_lsa($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::ExternalLSA -> event OSPF::external_lsa($packet, 2, lsaheader.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                             lsaheader.link_state_id, lsaheader.advert_router, self.netmask);
 
 on zeek_spicy_ospf::ExternalLSAItem -> event OSPF::external_lsa_item($packet, self.metric, self.fwd_addr, self.route_tag);
 
-on zeek_spicy_ospf::IA_Prefix -> event OSPF::ia_prefix($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::IA_Prefix -> event OSPF::ia_prefix($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                        lsaheader.link_state_id, lsaheader.advert_router, self.metric, self.prefix.prefix_len, self.prefix.prefix_data);
 
-on zeek_spicy_ospf::IA_Router -> event OSPF::ia_router($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::IA_Router -> event OSPF::ia_router($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                        lsaheader.link_state_id, lsaheader.advert_router, self.metric, self.router_id);
 
-on zeek_spicy_ospf::ExternalLSA_V3 -> event OSPF::external_v3($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
-                                                              lsaheader.link_state_id, lsaheader.advert_router, 
+on zeek_spicy_ospf::ExternalLSA_V3 -> event OSPF::external_v3($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
+                                                              lsaheader.link_state_id, lsaheader.advert_router,
                                                               self.prefix.prefix_len, self.prefix.prefix_data, self.fwd);
 
 
-on zeek_spicy_ospf::LinkLSA -> event OSPF::link_lsa($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::LinkLSA -> event OSPF::link_lsa($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                     lsaheader.link_state_id, lsaheader.advert_router);
 
 on zeek_spicy_ospf::LinkPrefix -> event OSPF::link_prefix($packet, self.prefix.prefix_len, self.prefix.prefix_data);
 
-on zeek_spicy_ospf::IntraPrefixes -> event OSPF::intra_prefixes($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id, 
+on zeek_spicy_ospf::IntraPrefixes -> event OSPF::intra_prefixes($packet, 3, lsaheader.ls_type.ls_type, parent.ospf_type, parent.router_id, parent.area_id,
                                                               lsaheader.link_state_id, lsaheader.advert_router);
 
 on zeek_spicy_ospf::IntraPrefix -> event OSPF::intra_prefix($packet, self.prefix.prefix_len, self.prefix.prefix_data);

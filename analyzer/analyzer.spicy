@@ -56,7 +56,7 @@ public type OSPFPacketV2 = unit(parent: OSPFPacket) {
 	};
 };
 
-type HelloPacket = unit(parent: OSPFPacket) { 
+type HelloPacket = unit(parent: OSPFPacket) {
 	netmask: addr &ipv4;
 	hello_int: uint16;
     opts: bitfield(8) {
@@ -70,7 +70,7 @@ type HelloPacket = unit(parent: OSPFPacket) {
     lls_data_block: bytes &eod if (self.opts.has_lls_data_block);
 };
 
-type Database = unit(parent: OSPFPacket, length: uint16) { 
+type Database = unit(parent: OSPFPacket, length: uint16) {
     MTU: uint16;
     opts: bitfield(8) {
         has_lls_data_block: 4;
@@ -96,9 +96,9 @@ type LSAHeader = unit(parent: OSPFPacket, is_desc: bool) {
     length: uint16;
     data: LSAHeaderData(parent, self) &size=self.length-20 if (!is_desc && self.length-20 > 0);
 };
-    
+
 type LSAHeaderData = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
-    switch ( lsaheader.ls_type ) 
+    switch ( lsaheader.ls_type )
         {
         LSAType::Router -> router: RouterLSA(parent, lsaheader) &size=lsaheader.length-20;
         LSAType::Network -> network: NetworkLSA(parent, lsaheader) &size=lsaheader.length-20;
@@ -153,22 +153,22 @@ type ExternalLSAItem = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
     route_tag: uint32;
 };
 
-type LinkRequest = unit (parent: OSPFPacket) { 
+type LinkRequest = unit (parent: OSPFPacket) {
     link_requests: LinkRequestItem(parent)[] &eod;
 };
 
-type LinkRequestItem = unit (parent: OSPFPacket) { 
+type LinkRequestItem = unit (parent: OSPFPacket) {
     ls_type: uint32;
     link_state_id: addr &ipv4;
     advert_router: addr &ipv4;
 };
 
-type LinkUpdate = unit (parent: OSPFPacket) { 
+type LinkUpdate = unit (parent: OSPFPacket) {
     num_lsas: uint32;
     lsas: LSAHeader(parent, False)[self.num_lsas];
 };
 
-type LinkAck = unit (parent: OSPFPacket, length: uint16) { 
+type LinkAck = unit (parent: OSPFPacket, length: uint16) {
     lsa_headers: LSAHeader(parent, True)[] &size=length;
 };
 
@@ -190,7 +190,7 @@ public type OSPFPacketV3 = unit(parent: OSPFPacket) {
 	};
 };
 
-type HelloPacketV3 = unit(parent: OSPFPacket) { 
+type HelloPacketV3 = unit(parent: OSPFPacket) {
 	interface_id: uint32;
     options_and_priority: uint32;
 	hello_int: uint16;
@@ -200,7 +200,7 @@ type HelloPacketV3 = unit(parent: OSPFPacket) {
     neighbors: addr[] &ipv4 &eod;
 };
 
-type DatabaseV3 = unit(parent: OSPFPacket, length: uint16) { 
+type DatabaseV3 = unit(parent: OSPFPacket, length: uint16) {
     options: uint32;
     MTU: uint16;
     : uint8;
@@ -242,7 +242,7 @@ type LSAHeaderV3 = unit(parent: OSPFPacket, is_desc: bool) {
 };
 
 type LSAHeaderDataV3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
-    switch ( lsaheader.ls_type.ls_type ) 
+    switch ( lsaheader.ls_type.ls_type )
         {
         LSATypeV3::Router -> router: RouterLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
         LSATypeV3::Network -> network: NetworkLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
@@ -355,7 +355,7 @@ type IntraPrefix = unit {
     prefix: Prefix();
 };
 
-type LinkUpdateV3 = unit (parent: OSPFPacket) { 
+type LinkUpdateV3 = unit (parent: OSPFPacket) {
     num_lsas: uint32;
     lsas: LSAHeaderV3(parent, False)[self.num_lsas];
 };

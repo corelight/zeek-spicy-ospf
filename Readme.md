@@ -3,24 +3,25 @@
 This is a Spicy based OSPF v2 & v3 packet analyzer for Zeek.  You must install [Spicy](https://docs.zeek.org/projects/spicy/en/latest/)
 to use this package.
 
-Links: 
-* Original logic imported from https://github.com/s-wells/spicy_parsers/tree/main/ospf, with author's permission. 
-* https://datatracker.ietf.org/doc/html/rfc2328
-* https://datatracker.ietf.org/doc/html/rfc2740
-* https://datatracker.ietf.org/doc/html/rfc5340
-* https://datatracker.ietf.org/doc/html/rfc4813#page-2
-* https://wiki.wireshark.org/OSPF
+Links:
+
+* Original logic imported from <https://github.com/s-wells/spicy_parsers/tree/main/ospf>, with author's permission.
+* <https://datatracker.ietf.org/doc/html/rfc2328>
+* <https://datatracker.ietf.org/doc/html/rfc2740>
+* <https://datatracker.ietf.org/doc/html/rfc5340>
+* <https://datatracker.ietf.org/doc/html/rfc4813#page-2>
+* <https://wiki.wireshark.org/OSPF>
 
 Testing PCAPs sources:
 
-* https://wiki.wireshark.org/SampleCaptures
-    * https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=ospf.cap
-* https://packetlife.net/captures/protocol/ospf/
-    * https://packetlife.net/media/captures/OSPF_LSA_types.cap
-    * https://packetlife.net/media/captures/OSPFv3_broadcast_adjacency.cap
-    * https://packetlife.net/media/captures/OSPFv3_with_AH.cap
+* <https://wiki.wireshark.org/SampleCaptures>
+  * <https://wiki.wireshark.org/SampleCaptures?action=AttachFile&do=get&target=ospf.cap>
+* <https://packetlife.net/captures/protocol/ospf/>
+  * <https://packetlife.net/media/captures/OSPF_LSA_types.cap>
+  * <https://packetlife.net/media/captures/OSPFv3_broadcast_adjacency.cap>
+  * <https://packetlife.net/media/captures/OSPFv3_with_AH.cap>
 
-### Example Logs:
+## Example Logs
 
 ```
 #separator \x09
