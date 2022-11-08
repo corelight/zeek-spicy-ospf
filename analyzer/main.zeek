@@ -181,9 +181,11 @@ event OSPF::router_lsa_link(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spi
                             router_id: addr, area_id: addr,
                             link_state_id: addr, advert_router: addr, link_id: addr, link_data: addr, link_type: zeek_spicy_ospf::RouterLSAType)
     {
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
                         $advert_router=advert_router, $link_id=link_id, $link_data=link_data, $link_type=LinkTypes[link_type],
-                        $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];
+                        $lsa_type=LSATypes[lsa_type], $ip_src=src, $ip_dst=dst];
     Log::write(OSPF::OSPF_LOG, info);
     }
 
@@ -192,9 +194,11 @@ event OSPF::router_lsa_link_v3(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_
                                link_state_id: addr, advert_router: addr, link_type: zeek_spicy_ospf::RouterLSAType,
                                interface_id: count, neighbor_interface_id: count, neighbor_router_id: addr)
     {
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
-                        $advert_router=advert_router, $link_type=LinkTypes[link_type], $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip6$src,
-                        $ip_dst=pkt$ip6$dst, $interface_id=interface_id,
+                        $advert_router=advert_router, $link_type=LinkTypes[link_type], $lsa_type=LSATypes[lsa_type], $ip_src=src,
+                        $ip_dst=dst, $interface_id=interface_id,
                         $neighbor_interface_id=neighbor_interface_id, $neighbor_router_id=neighbor_router_id];
     Log::write(OSPF::OSPF_LOG, info);
     }
@@ -215,8 +219,10 @@ event OSPF::summary_lsa_item(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_sp
                              router_id: addr, area_id: addr,
                              link_state_id: addr, advert_router: addr, netmask: addr, metric: count)
     {
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
-                        $advert_router=advert_router, $netmask=netmask, $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];
+                        $advert_router=advert_router, $netmask=netmask, $lsa_type=LSATypes[lsa_type], $ip_src=src, $ip_dst=dst];
     Log::write(OSPF::OSPF_LOG, info);
     }
 
@@ -224,9 +230,11 @@ event OSPF::external_lsa(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spicy_
                          router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr, netmask: addr)
     {
     set_session(pkt);
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
                         $advert_router=advert_router, $netmask=netmask, $metrics=pkt$ospf$metrics, $fwd_addrs=pkt$ospf$fwd_addrs, $route_tags=pkt$ospf$route_tags,
-                        $lsa_type=LSATypes[lsa_type], $ip_src=pkt$ip$src, $ip_dst=pkt$ip$dst];
+                        $lsa_type=LSATypes[lsa_type], $ip_src=src, $ip_dst=dst];
     Log::write(OSPF::OSPF_LOG, info);
     }
 
@@ -261,10 +269,12 @@ event OSPF::ia_prefix(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spicy_osp
                       router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr,
                       metric: count, prefix_len: count, prefix_data: string)
     {
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local prefix_addr: addr = raw_bytes_to_v6_addr(prefix_data);
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
                         $advert_router=advert_router, $metric=metric, $prefix=prefix_addr/prefix_len, $lsa_type=LSATypesV3[lsa_type],
-                        $ip_src=pkt$ip6$src, $ip_dst=pkt$ip6$dst];
+                        $ip_src=src, $ip_dst=dst];
     Log::write(OSPF::OSPF_LOG, info);
     }
 
@@ -272,9 +282,11 @@ event OSPF::ia_router(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spicy_osp
                       router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr,
                       metric: count, dest_router_id: addr)
     {
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
                         $advert_router=advert_router, $metrics=vector(metric), $dest_router_id=dest_router_id, $lsa_type=LSATypesV3[lsa_type],
-                        $ip_src=pkt$ip6$src, $ip_dst=pkt$ip6$dst];
+                        $ip_src=src, $ip_dst=dst];
     Log::write(OSPF::OSPF_LOG, info);
     }
 
@@ -282,10 +294,12 @@ event OSPF::external_v3(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spicy_o
                         router_id: addr, area_id: addr,
                         link_state_id: addr, advert_router: addr, metric: count, prefix_len: count, prefix_data: string, fwd_addr: addr)
     {
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local prefix_addr: addr = raw_bytes_to_v6_addr(prefix_data);
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
                         $advert_router=advert_router, $metrics=vector(metric), $prefix=prefix_addr/prefix_len, $fwd_addrs=vector(fwd_addr), $lsa_type=LSATypesV3[lsa_type],
-                        $ip_src=pkt$ip6$src, $ip_dst=pkt$ip6$dst];
+                        $ip_src=src, $ip_dst=dst];
     Log::write(OSPF::OSPF_LOG, info);
     }
 
@@ -300,8 +314,10 @@ event OSPF::link_lsa(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spicy_ospf
                      router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr)
     {
     set_session(pkt);
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
-                        $advert_router=advert_router, $lsa_type=LSATypesV3[lsa_type], $ip_src=pkt$ip6$src, $ip_dst=pkt$ip6$dst,
+                        $advert_router=advert_router, $lsa_type=LSATypesV3[lsa_type], $ip_src=src, $ip_dst=dst,
                         $link_prefixes=pkt$ospf$link_prefixes];
     Log::write(OSPF::OSPF_LOG, info);
     }
@@ -317,8 +333,10 @@ event OSPF::intra_prefixes(pkt: raw_pkt_hdr, version: count, lsa_type: zeek_spic
                            router_id: addr, area_id: addr, link_state_id: addr, advert_router: addr)
     {
     set_session(pkt);
+    local src: addr = version==3 ? pkt$ip6$src : pkt$ip$src;
+    local dst: addr = version==3 ? pkt$ip6$dst : pkt$ip$dst;
     local info: Info = [$ospf_type=MsgTypes[ospf_type], $version=version, $router_id=router_id, $area_id=area_id, $link_state_id=link_state_id,
-                        $advert_router=advert_router, $lsa_type=LSATypesV3[lsa_type], $ip_src=pkt$ip6$src, $ip_dst=pkt$ip6$dst,
+                        $advert_router=advert_router, $lsa_type=LSATypesV3[lsa_type], $ip_src=src, $ip_dst=dst,
                         $intra_prefixes=pkt$ospf$intra_prefixes];
     Log::write(OSPF::OSPF_LOG, info);
     }
