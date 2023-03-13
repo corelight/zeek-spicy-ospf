@@ -9,8 +9,8 @@ public type OSPFPacket = unit {
     checksum: uint16;
 
 	switch ( self.version ) {
-		2 -> ospfv2: OSPFPacketV2(self) &size=self.packet_length-14;
-		3 -> ospfv3: OSPFPacketV3(self) &size=self.packet_length-14;
+		2 -> ospfv2: OSPFPacketV2(self) &size=self.packet_length-14 &requires=(self.packet_length >= 24);
+		3 -> ospfv3: OSPFPacketV3(self) &size=self.packet_length-14 &requires=(self.packet_length >= 16);
         * -> payload: bytes &size=self.packet_length-14 if (self.packet_length-14 > 0);
 	};
 };
@@ -44,7 +44,7 @@ public type OSPFPacketV2 = unit(parent: OSPFPacket) {
     autype: uint16;
     auth: uint64;
 
-    var len: uint16 = parent.packet_length-24 &requires=(parent.packet_length >= 24);
+    var len: uint16 = parent.packet_length-24;
 
 	switch ( parent.ospf_type ) {
 		MsgType::Hello -> hello: HelloPacket(parent);
@@ -178,7 +178,7 @@ public type OSPFPacketV3 = unit(parent: OSPFPacket) {
     instance_id: uint8;
     : uint8;
 
-    var len: uint16 = parent.packet_length-16 &requires=(parent.packet_length >= 16);
+    var len: uint16 = parent.packet_length-16;
 
 	switch ( parent.ospf_type ) {
 		MsgType::Hello -> hello: HelloPacketV3(parent);
