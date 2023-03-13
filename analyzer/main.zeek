@@ -155,8 +155,9 @@ const LinkTypes = {
 
 event zeek_init()
     {
-    if ( ! PacketAnalyzer::try_register_packet_analyzer_by_name("IP", 0x59, "spicy::OSPF") )
-		Reporter::error("cannot register OSPF Spicy analyzer");
+    if ( ! PacketAnalyzer::try_register_packet_analyzer_by_name("IP", 0x59, "spicy_OSPF") )
+        if ( ! PacketAnalyzer::try_register_packet_analyzer_by_name("IP", 0x59, "spicy::OSPF") )
+		    Reporter::error("cannot register OSPF Spicy analyzer");
     }
 
 event OSPF::hello(pkt: raw_pkt_hdr, version: count, router_id: addr, area_id: addr, netmask: addr, interface_id: count,
