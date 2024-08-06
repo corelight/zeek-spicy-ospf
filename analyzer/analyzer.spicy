@@ -101,7 +101,7 @@ type LSAHeaderData = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
     switch ( lsaheader.ls_type )
         {
         LSAType::Router -> router: RouterLSA(parent, lsaheader) &size=lsaheader.length-20;
-        LSAType::Network -> network: NetworkLSA(parent, lsaheader) &size=lsaheader.length-20;
+        LSAType::Network -> net: NetworkLSA(parent, lsaheader) &size=lsaheader.length-20;
         LSAType::Summary_IP -> summary_ip: SummaryLSA(parent, lsaheader) &size=lsaheader.length-20;
         LSAType::Summary_ASBR -> summary_asbr: SummaryLSA(parent, lsaheader) &size=lsaheader.length-20;
         LSAType::External -> external: ExternalLSA(parent, lsaheader) &size=lsaheader.length-20;
@@ -245,7 +245,7 @@ type LSAHeaderDataV3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
     switch ( lsaheader.ls_type.ls_type )
         {
         LSATypeV3::Router -> router: RouterLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
-        LSATypeV3::Network -> network: NetworkLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
+        LSATypeV3::Network -> net: NetworkLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
         LSATypeV3::IA_Prefix -> ia_prefix: IA_Prefix(parent, lsaheader) &size=lsaheader.length-20;
         LSATypeV3::IA_Router -> ia_router: IA_Router(parent, lsaheader) &size=lsaheader.length-20;
         LSATypeV3::External -> external: ExternalLSA_V3(parent, lsaheader) &size=lsaheader.length-20;
