@@ -10,5 +10,5 @@ event OSPF::message(pkt: raw_pkt_hdr, version: count, ospf_type: zeek_spicy_ospf
                     router_id: addr, area_id: addr)
 	{
     print(cat("OSPF Packet ", pkt$ip$src, " ", pkt$ip$dst, " ", version, " ", ospf_type, " ",
-              router_id, " ", area_id, " ", pkt));
+              router_id, " ", area_id, " ", pkt?$ospf ? cat(pkt$ospf) : "<uninitialized>"));
     }

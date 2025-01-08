@@ -66,7 +66,7 @@ type HelloPacket = unit(parent: OSPFPacket) {
 	dead_int: uint32;
 	desig_router: addr &ipv4;
 	backup_router: addr &ipv4;
-    neighbors: addr[] &ipv4 &eod;
+    neighbors: (addr &ipv4)[] &eod;
     lls_data_block: bytes &eod if (self.opts.has_lls_data_block);
 };
 
@@ -130,7 +130,7 @@ type RouterLSALink = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
 
 type NetworkLSA = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
 	netmask: addr &ipv4;
-    routers: addr[] &ipv4 &eod;
+    routers: (addr &ipv4)[] &eod;
 };
 
 type SummaryLSA = unit(parent: OSPFPacket, lsaheader: LSAHeader) {
@@ -197,7 +197,7 @@ type HelloPacketV3 = unit(parent: OSPFPacket) {
 	dead_int: uint16;
 	desig_router: addr &ipv4;
 	backup_router: addr &ipv4;
-    neighbors: addr[] &ipv4 &eod;
+    neighbors: (addr &ipv4)[] &eod;
 };
 
 type DatabaseV3 = unit(parent: OSPFPacket, length: uint16) {
@@ -283,7 +283,7 @@ type NetworkLSA_V3 = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
         B: 24;
         options: 0..23;
 	};
-    routers: addr[] &ipv4 &size=lsaheader.length-24 if (lsaheader.length-24 > 0);
+    routers: (addr &ipv4)[] &size=lsaheader.length-24 if (lsaheader.length-24 > 0);
 };
 
 type IA_Prefix = unit(parent: OSPFPacket, lsaheader: LSAHeaderV3) {
